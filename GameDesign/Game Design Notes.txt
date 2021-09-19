@@ -1,0 +1,48 @@
+****Game Name****
+
+
+****Game Theme****
+
+
+****Game Design Notes****
+
+Player Experience:
+	-
+
+Core Mechanic:
+	-
+
+Game Mechanics:
+	-
+
+
+****Game Features****
+Onion Design
+
+Identify your core feature and start there and work your way outward where features deacrease in importance.
+Write down the most important features of ArgonAssault
+1. 
+2. 
+3. 
+4. 
+5. 
+6. 
+7. 
+
+Additional Features to consider:
+1. 
+2. 
+3. 
+4. 
+5. 
+
+
+By using this method you can answer some questions which often come up as you design you game
+here are some examples:
+
+	What features should I include in my game?
+	Where should i start development?
+	What are my priorities?
+	What if I run out of time?
+	When should I stop?
+
