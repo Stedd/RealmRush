@@ -1,26 +1,47 @@
 ****Game Name****
+Realm Rush
 
+****Game Type****
+	- Tower Defence
+		- Place Defencive Structures
+		- Defend and objective
+		- Waves of Enemies
 
 ****Game Theme****
+Story:
+	Defend against an invading kingdom who have come to pillage your castle
+	
+Art:
+	Medieval Fantasy
+	Voxel Art
+	
+****Tech Setup****
+Platform:
+	PC/MAC/Linux
+Aspect Ratio:
+	1920x1080	16:9
+Input:
+	Mouse only
 
 
 ****Game Design Notes****
 
 Player Experience:
-	-
+	- Tactical/Strategic
 
 Core Mechanic:
-	-
+	- Using Limited resources, strategically place towers to stop enemies from reaching their goal
 
-Game Mechanics:
-	-
+Core Game loop:
+	- Survive against waves of enemies for as long as possible
+	- Level reloads when the player runs out of gold
 
 
 ****Game Features****
 Onion Design
 
 Identify your core feature and start there and work your way outward where features deacrease in importance.
-Write down the most important features of ArgonAssault
+Write down the most important features of your game
 1. 
 2. 
 3. 
@@ -30,8 +51,8 @@ Write down the most important features of ArgonAssault
 7. 
 
 Additional Features to consider:
-1. 
-2. 
+1. Enemy Pathfinding	Enemies will nynamically change their path
+2. Build Timer				Towers take n time to complete when built
 3. 
 4. 
 5. 
