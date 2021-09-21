@@ -23,7 +23,7 @@ void UpdateLabelName(){
     coord.x = Mathf.RoundToInt(transform.parent.position.x/UnityEditor.EditorSnapSettings.move.x);
     coord.y = Mathf.RoundToInt(transform.parent.position.z/UnityEditor.EditorSnapSettings.move.z);
 
-    label.text = $"{coord.x},{coord.y}";
+    label.text = $"{coord}";
 }
 
 void UpdateObjectName(){
