@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    [SerializeField] List<Waypoint> path = new List<Waypoint>();
-    [SerializeField] float moveInterval = 1f;
+    [SerializeField] List<Tile> path = new List<Tile>();
+    [SerializeField] [Range(0f, 5f)]float speed = 1f;
+
+    Vector3 startPosition;
+    Vector3 endPosition;
+    float travelPercent = 0f;
 
     void Start()
     {
@@ -14,12 +18,20 @@ public class EnemyMovement : MonoBehaviour
 
     IEnumerator FollowPath()
     {
-        foreach (Waypoint waypoint in path)
+        foreach (Tile waypoint in path)
         {
-            Debug.Log(waypoint.name);
-            
-            transform.localPosition = waypoint.transform.position;
-            yield return new WaitForSeconds(moveInterval);
+            startPosition   = transform.position;
+            endPosition     = waypoint.transform.position;
+            travelPercent   = 0;
+            transform.LookAt(endPosition);
+
+            // Debug.Log($"start: {startPosition}. end: {endPosition}");
+            while(travelPercent <1f)
+            {
+                travelPercent += Time.deltaTime*speed;
+                transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 }
