@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+    [SerializeField] ParticleSystem projectile;
     [SerializeField] Transform weapon;
     [SerializeField] EnemyHandler enemyHandler;
     // [SerializeField] List<GameObject> enemies;
@@ -20,6 +21,7 @@ public class Tower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ShootProjectile(false);
         // enemies = enemyHandler.ReturnAllEnemies();
         float lowestDist = 10000;
         bool targetFound = false;
@@ -35,8 +37,13 @@ public class Tower : MonoBehaviour
         }
         if(targetFound)
         {
-        weapon.transform.LookAt(closestEnemy.transform.position);
+            weapon.transform.LookAt(closestEnemy.transform.position);
+            ShootProjectile(true);
         }
-            
+    }
+    void ShootProjectile(bool _state)
+    {
+        var emissionModule = projectile.emission;
+        emissionModule.enabled = _state;
     }
 }
