@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    [SerializeField] EnemyHandler enemyHandler;
     [SerializeField] List<Tile> path = new List<Tile>();
     [SerializeField] [Range(0f, 5f)]float speed = 1f;
 
@@ -13,6 +14,8 @@ public class EnemyMovement : MonoBehaviour
 
     void Start()
     {
+        enemyHandler = FindObjectOfType<EnemyHandler>();
+        enemyHandler.AddEnemyToAllEnemies(this.gameObject);
         StartCoroutine(FollowPath());
     }
 

@@ -4,18 +4,39 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] List<EnemyMovement> enemies;
+    [SerializeField] Transform weapon;
+    [SerializeField] EnemyHandler enemyHandler;
+    // [SerializeField] List<GameObject> enemies;
+
+    [SerializeField]float maxDistance = 40f;
+
+    GameObject closestEnemy;
 
     void Start()
     {
-        enemies.Add(FindObjectOfType<EnemyMovement>());
+        enemyHandler = FindObjectOfType<EnemyHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(enemies[0].transform.position);
+        // enemies = enemyHandler.ReturnAllEnemies();
+        float lowestDist = 10000;
+        bool targetFound = false;
+        foreach (GameObject enemy in enemyHandler.ReturnAllEnemies())
+        {
+            float distanceToCurrentTarget = Vector3.Magnitude(enemy.transform.position-transform.position);
+            if (distanceToCurrentTarget<lowestDist && distanceToCurrentTarget<maxDistance)
+            {
+                targetFound = true;
+                lowestDist = distanceToCurrentTarget;
+                closestEnemy = enemy;
+            }
+        }
+        if(targetFound)
+        {
+        weapon.transform.LookAt(closestEnemy.transform.position);
+        }
+            
     }
-        
 }

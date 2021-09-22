@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a16cf44e28f02409c23498ed14acf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: []
+  weapon: {fileID: 3144582324300694500}
+  enemyHandler: {fileID: 0}
+  maxDistance: 40
 --- !u!1 &6131056645070147807
 GameObject:
   m_ObjectHideFlags: 0
