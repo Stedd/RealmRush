@@ -10,6 +10,8 @@ public class Tower : MonoBehaviour
     // [SerializeField] List<GameObject> enemies;
 
     [SerializeField]float maxDistance = 40f;
+    [SerializeField]float damage = 1f ;
+    [SerializeField]float score = 0f;
 
     GameObject closestEnemy;
 
@@ -45,5 +47,12 @@ public class Tower : MonoBehaviour
     {
         var emissionModule = projectile.emission;
         emissionModule.enabled = _state;
+    }
+
+    public void UpdateScore(float _score){
+        score += _score;
+    }
+    public float GetDamage(){
+        return damage;
     }
 }
