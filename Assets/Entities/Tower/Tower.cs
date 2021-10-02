@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
+
+    [Header("Assigned on start")] 
+    [SerializeField] EnemyHandler enemyHandler;
+    [SerializeField] ScoreHandler scoreHandler;
+
+    [Header("Prefabs")]
     [SerializeField] ParticleSystem projectile;
     [SerializeField] Transform weapon;
-    [SerializeField] EnemyHandler enemyHandler;
-    // [SerializeField] List<GameObject> enemies;
 
+
+    [Header("Parameters")]
     [SerializeField]float maxDistance = 40f;
     [SerializeField]int damage = 1 ;
+    [SerializeField]int cost = 30 ;
+
+    [Header("Stats")] 
     [SerializeField]float score = 0f;
 
     GameObject closestEnemy;
@@ -18,6 +27,9 @@ public class Tower : MonoBehaviour
     void Start()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
+        scoreHandler = FindObjectOfType<ScoreHandler>();
+
+        scoreHandler.ModifyWealth(-cost);
     }
 
     // Update is called once per frame

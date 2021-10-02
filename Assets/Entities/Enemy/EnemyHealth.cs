@@ -4,42 +4,51 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("Assigned on start")] 
     [SerializeField] EnemyHandler enemyHandler;
+    [SerializeField] ScoreHandler scoreHandler;
+
+    [Header("Parameters")]
     [SerializeField] int maxHealth = 5;
+    [SerializeField] int wealthValue = 5;
+
+    [Header("Stats")] 
     [SerializeField] int currentHealth;
     // Start is called before the first frame update
     void Start()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
+        scoreHandler = FindObjectOfType<ScoreHandler>();
         currentHealth = maxHealth;
     }
 
-    private void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject damager)
     {
-        ProcessHit(other);
+        ProcessHitFrom(damager);
     }
 
-    private void ProcessHit(GameObject other)
+    private void ProcessHitFrom(GameObject damager)
     {
         // SpawnFX(damageVFX);
 
-        // Debug.Log(other.GetComponentInParent<Tower>().GetDamage());
-        currentHealth -= other.GetComponentInParent<Tower>().GetDamage();
+        // Debug.Log(damager.GetComponentInParent<Tower>().GetDamage());
+        currentHealth -= damager.GetComponentInParent<Tower>().GetDamage();
 
         //UpdateHealthText(health);
 
         if(currentHealth <= 0)
         {
-            ProcessDeath(other);
+            ProcessDeathFrom(damager);
         }
     }
 
-    private void ProcessDeath(GameObject other)
+    private void ProcessDeathFrom(GameObject damager)
     {
-        other.GetComponentInParent<Tower>().UpdateScore(1f);
+        damager.GetComponentInParent<Tower>().UpdateScore(1f);
 
         // SpawnFX(deathFX);
-        enemyHandler.RemoveEnemy(this.gameObject);
+        scoreHandler.ModifyWealth(wealthValue);
+        enemyHandler.RemoveEnemy(gameObject);
         Destroy(gameObject);
     }
 }

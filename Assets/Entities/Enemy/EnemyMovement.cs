@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] EnemyHandler enemyHandler;
+    [SerializeField] ScoreHandler scoreHandler;
     [SerializeField] List<Tile> path;
     [SerializeField] [Range(0f, 5f)]float speed = 1f;
 
@@ -15,7 +16,9 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
-        enemyHandler.AddEnemyToAllEnemies(this.gameObject);
+        enemyHandler.AddEnemyToAllEnemies(gameObject);
+        
+        scoreHandler = FindObjectOfType<ScoreHandler>();
         StartCoroutine(FollowPath());
     }
 
@@ -40,5 +43,15 @@ public class EnemyMovement : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+
+        HandleReachedEndOfPath();
     }
+
+    void HandleReachedEndOfPath()
+    {
+        scoreHandler.EnemyReachedGoal(gameObject);
+        enemyHandler.RemoveEnemy(gameObject);
+        Destroy(gameObject);
+    }
+
 }

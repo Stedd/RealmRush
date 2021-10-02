@@ -108,10 +108,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5599539567497807159, guid: 4af571b983b23f94f8d5ca4dbda27de5, type: 3}
       propertyPath: m_Name
-      value: StrongEnemy
+      value: EnemyStrong
       objectReference: {fileID: 0}
     - target: {fileID: 6251302194646931819, guid: 4af571b983b23f94f8d5ca4dbda27de5, type: 3}
       propertyPath: maxHealth
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6251302194646931819, guid: 4af571b983b23f94f8d5ca4dbda27de5, type: 3}
+      propertyPath: wealthValue
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6819292882879353878, guid: 4af571b983b23f94f8d5ca4dbda27de5, type: 3}
