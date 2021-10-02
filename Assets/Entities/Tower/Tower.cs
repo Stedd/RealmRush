@@ -10,7 +10,7 @@ public class Tower : MonoBehaviour
     // [SerializeField] List<GameObject> enemies;
 
     [SerializeField]float maxDistance = 40f;
-    [SerializeField]float damage = 1f ;
+    [SerializeField]int damage = 1 ;
     [SerializeField]float score = 0f;
 
     GameObject closestEnemy;
@@ -52,7 +52,7 @@ public class Tower : MonoBehaviour
     public void UpdateScore(float _score){
         score += _score;
     }
-    public float GetDamage(){
+    public int GetDamage(){
         return damage;
     }
 }
