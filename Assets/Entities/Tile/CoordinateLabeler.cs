@@ -6,11 +6,15 @@ using TMPro;
 [ExecuteAlways]
 public class CoordinateLabeler : MonoBehaviour
 {
+[SerializeField] Color defaultColor = Color.white;
+[SerializeField] Color occupiedColor = Color.gray;
+Tile tile;
 TextMeshPro label;
 Vector2Int coord = new Vector2Int();
 
 private void Awake() {
-    label=GetComponent<TextMeshPro>();
+    tile    = GetComponentInParent<Tile>();
+    label   = GetComponent<TextMeshPro>();
     UpdateLabelName();
 }
 
@@ -23,6 +27,10 @@ void UpdateLabelName(){
     coord.x = Mathf.RoundToInt(transform.parent.position.x/UnityEditor.EditorSnapSettings.move.x);
     coord.y = Mathf.RoundToInt(transform.parent.position.z/UnityEditor.EditorSnapSettings.move.z);
 
+    label.color = defaultColor;
+    if(!tile.IsPlaceable){
+        label.color = occupiedColor;
+    }
     label.text = $"{coord}";
 }
 

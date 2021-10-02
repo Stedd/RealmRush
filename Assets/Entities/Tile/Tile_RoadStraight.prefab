@@ -15,6 +15,30 @@ PrefabInstance:
       propertyPath: isPlaceable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5278603418332704904, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: occupiedColor.b
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5278603418332704904, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: occupiedColor.g
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5278603418332704904, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: occupiedColor.r
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737310404948951551, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737310404948951551, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737310404948951551, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294901760
+      objectReference: {fileID: 0}
     - target: {fileID: 6844695128205670269, guid: 7a86d315a52012a4ab291d75e3b67cc0, type: 3}
       propertyPath: m_Name
       value: Tile_RoadStraight

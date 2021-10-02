@@ -5,11 +5,14 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     [SerializeField] GameObject towerPrefab;
-    [SerializeField] bool isPlaceable = true; 
+    [SerializeField] bool isPlaceable = true;
+
+    public bool IsPlaceable { get => isPlaceable; set => isPlaceable = value; }
+
     private void OnMouseDown() {
-        if(isPlaceable){
+        if(IsPlaceable){
             Instantiate(towerPrefab, transform.position, Quaternion.identity);
-            isPlaceable = false;
+            IsPlaceable = false;
         }
     }
 }
