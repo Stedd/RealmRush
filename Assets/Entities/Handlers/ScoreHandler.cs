@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class ScoreHandler : MonoBehaviour
 {
+    [Header("Parameters")]
     [SerializeField] int maxHealth = 5;
-    [SerializeField] int currentHealth;
     [SerializeField] int wealthStartAmount = 100;
+    [Header("Stats")]
+    [SerializeField] int currentHealth;
     [SerializeField] int wealthAmount;
 
     void Start()
@@ -29,6 +31,6 @@ public class ScoreHandler : MonoBehaviour
 
     public void ModifyWealth(int _amount){
         wealthAmount += _amount;
-        Debug.Log($"Wealth modification. Change:{_amount}. Current: {wealthAmount}");
+        // Debug.Log($"Wealth modification. Change:{_amount}. Current: {wealthAmount}");
     }
 }
