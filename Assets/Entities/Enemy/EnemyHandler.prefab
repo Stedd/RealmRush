@@ -43,11 +43,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62a3dc5f11a44cb4d9faccb4fda8599f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnRate: 1
+  objectPoolSize: 20
+  objectPool: {fileID: 5933799035485059591, guid: f788405216a67b14ead70299a821f731, type: 3}
   enemyPrefabs:
   - {fileID: 5599539567497807159, guid: 4af571b983b23f94f8d5ca4dbda27de5, type: 3}
   - {fileID: 1460346957670431539, guid: d00403ece6c81e3409adb225c74eb396, type: 3}
   - {fileID: 6975173952531158912, guid: 0918a47a96be6ad4e853d83c60acda6d, type: 3}
-  allEnemies: []
   path:
   - {fileID: 0}
   - {fileID: 0}
@@ -75,3 +77,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  enemyPools: []
+  allEnemies: []

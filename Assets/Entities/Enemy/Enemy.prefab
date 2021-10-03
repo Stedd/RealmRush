@@ -131,7 +131,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2692714622321691895
 Transform:
   m_ObjectHideFlags: 0
@@ -189,7 +189,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyHandler: {fileID: 0}
-  path: []
+  scoreHandler: {fileID: 0}
+  path:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   speed: 0.4
 --- !u!114 &6251302194646931819
 MonoBehaviour:
@@ -203,5 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0f42db9d6c21540a5ef3107e36946a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyHandler: {fileID: 0}
+  scoreHandler: {fileID: 0}
   maxHealth: 10
+  wealthValue: 5
   currentHealth: 0

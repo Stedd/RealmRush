@@ -15,7 +15,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("Stats")] 
     [SerializeField] int currentHealth;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
         scoreHandler = FindObjectOfType<ScoreHandler>();
@@ -49,6 +49,7 @@ public class EnemyHealth : MonoBehaviour
         // SpawnFX(deathFX);
         scoreHandler.ModifyWealth(wealthValue);
         enemyHandler.RemoveEnemy(gameObject);
-        Destroy(gameObject);
+        // Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

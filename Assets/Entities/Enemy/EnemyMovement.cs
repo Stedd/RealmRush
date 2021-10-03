@@ -13,8 +13,10 @@ public class EnemyMovement : MonoBehaviour
     Vector3 endPosition;
     float travelPercent = 0f;
 
-    void Start()
+    void OnEnable()
     {
+        transform.localPosition = path[0].transform.localPosition;
+        transform.LookAt(path[1].transform.localPosition);
         enemyHandler = FindObjectOfType<EnemyHandler>();
         enemyHandler.AddEnemyToAllEnemies(gameObject);
         
@@ -51,7 +53,8 @@ public class EnemyMovement : MonoBehaviour
     {
         scoreHandler.EnemyReachedGoal(gameObject);
         enemyHandler.RemoveEnemy(gameObject);
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
 }
