@@ -18,6 +18,7 @@ public class Tower : MonoBehaviour
     [SerializeField]float maxDistance = 40f;
     [SerializeField]int damage = 1 ;
     [SerializeField]int cost = 30 ;
+    public int Cost { get => cost; set => cost = value; }
 
     [Header("Stats")] 
     [SerializeField]float score = 0f;
@@ -29,7 +30,7 @@ public class Tower : MonoBehaviour
         enemyHandler = FindObjectOfType<EnemyHandler>();
         scoreHandler = FindObjectOfType<ScoreHandler>();
 
-        scoreHandler.ModifyWealth(-cost);
+        //scoreHandler.ModifyWealth(-cost);
     }
 
     // Update is called once per frame
@@ -37,7 +38,7 @@ public class Tower : MonoBehaviour
     {
         ShootProjectile(false);
         // enemies = enemyHandler.ReturnAllEnemies();
-        float lowestDist = 10000;
+        float lowestDist = Mathf.Infinity;
         bool targetFound = false;
         foreach (GameObject enemy in enemyHandler.ReturnAllEnemies())
         {

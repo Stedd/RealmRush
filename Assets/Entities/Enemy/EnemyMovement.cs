@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    [Header("Parameters")]
+    [SerializeField] [Range(0f, 5f)]float speed = 1f;
+    [SerializeField] int damage = 1;
+
+
     [SerializeField] EnemyHandler enemyHandler;
     [SerializeField] ScoreHandler scoreHandler;
     [SerializeField] List<Tile> path;
-    [SerializeField] [Range(0f, 5f)]float speed = 1f;
 
     Vector3 startPosition;
     Vector3 endPosition;
@@ -51,7 +55,8 @@ public class EnemyMovement : MonoBehaviour
 
     void HandleReachedEndOfPath()
     {
-        scoreHandler.EnemyReachedGoal(gameObject);
+        scoreHandler.ModifyHealth(-damage);
+        scoreHandler.ModifyWealth(-100);
         enemyHandler.RemoveEnemy(gameObject);
         //Destroy(gameObject);
         gameObject.SetActive(false);

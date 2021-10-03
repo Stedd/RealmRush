@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    [SerializeField] GameObject towerPrefab;
+    [Header("Assigned on start")] 
+    [SerializeField] BuildingHandler buildingHandler;
     [SerializeField] bool isPlaceable = true;
 
     public bool IsPlaceable { get => isPlaceable; set => isPlaceable = value; }
 
+    private void Awake() {
+        buildingHandler = FindObjectOfType<BuildingHandler>();
+    }
+
     private void OnMouseDown() {
-        if(IsPlaceable){
-            Instantiate(towerPrefab, transform.position, Quaternion.identity);
-            IsPlaceable = false;
-        }
+        buildingHandler.BuildTower(gameObject);
     }
 }
