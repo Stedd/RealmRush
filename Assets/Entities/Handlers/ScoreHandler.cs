@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ScoreHandler : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI dispayBalance;
+
     [Header("Parameters")]
     [SerializeField] int startHealth = 5;
     [SerializeField] int startWealth = 100;
@@ -17,6 +21,7 @@ public class ScoreHandler : MonoBehaviour
     {
         currentHealth = startHealth;
         currentWealth = startWealth;
+        UpdateGUI();
     }
 
     public void ModifyHealth(GameObject enemy)
@@ -41,6 +46,7 @@ public class ScoreHandler : MonoBehaviour
 
     public void ModifyWealth(int _amount){
         currentWealth += _amount;
+        UpdateGUI();
         // Debug.Log($"Wealth modification. Change:{_amount}. Current: {wealthAmount}");
     }
 
@@ -48,6 +54,10 @@ public class ScoreHandler : MonoBehaviour
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    void UpdateGUI(){
+        dispayBalance.text = $"Gold: {currentWealth.ToString()}";
     }
 
 }

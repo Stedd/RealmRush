@@ -43,7 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e259bfb920b121d44ae03fc7b84db313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 50
+  dispayBalance: {fileID: 0}
+  startHealth: 10
   startWealth: 100
   currentHealth: 0
   currentWealth: 0
