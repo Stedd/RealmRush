@@ -10,6 +10,8 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Parameters")]
     [SerializeField] int maxHealth = 5;
+    [SerializeField] int difficultyRamp = 1;
+
     [SerializeField] int wealthValue = 5;
 
     [Header("Stats")] 
@@ -51,5 +53,6 @@ public class EnemyHealth : MonoBehaviour
         enemyHandler.RemoveEnemy(gameObject);
         // Destroy(gameObject);
         gameObject.SetActive(false);
+        maxHealth += difficultyRamp;
     }
 }
