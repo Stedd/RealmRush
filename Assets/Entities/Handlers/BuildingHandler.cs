@@ -20,7 +20,7 @@ public class BuildingHandler : MonoBehaviour
         Tile _tile_Script = _tile_GO.GetComponentInChildren<Tile>();
         if(_tile_Script.IsPlaceable)
         {
-            if(scoreHandler.CurrentWealth-buildings[0].Cost < 0)
+            if(scoreHandler.CurrentBalance-buildings[0].Cost < 0)
             {
                 print("Insufficient Funds!");
             }
