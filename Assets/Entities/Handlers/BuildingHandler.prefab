@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreHandler: {fileID: 0}
+  _buildMenu: {fileID: 0}
   buildings:
   - {fileID: 5722631354108134187, guid: 8a965e088bae16643aab3d07ccfd5e2e, type: 3}
+  - {fileID: 6261550781972269396, guid: dcf90521dd3b06548b2a43a02a5f6dc3, type: 3}
