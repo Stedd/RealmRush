@@ -45,11 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a16cf44e28f02409c23498ed14acf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 6695134864757201866}
-  weapon: {fileID: 3144582324300694500}
   enemyHandler: {fileID: 0}
+  scoreHandler: {fileID: 0}
+  _projectile: {fileID: 6695134864757201866}
+  weapon: {fileID: 3144582324300694500}
   maxDistance: 40
   damage: 1
+  fireRate: 1
+  cost: 30
   score: 0
 --- !u!1 &4415926110232311550
 GameObject:

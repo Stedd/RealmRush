@@ -34,7 +34,7 @@ public class EnemyHealth : MonoBehaviour
         // SpawnFX(damageVFX);
 
         // Debug.Log(damager.GetComponentInParent<Tower>().GetDamage());
-        currentHealth -= damager.GetComponentInParent<Tower>().GetDamage();
+        currentHealth -= damager.GetComponentInParent<Tower>().Damage;
 
         //UpdateHealthText(health);
 

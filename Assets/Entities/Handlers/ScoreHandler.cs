@@ -11,16 +11,16 @@ public class ScoreHandler : MonoBehaviour
 
     [Header("Parameters")]
     [SerializeField] int startHealth = 5;
-    [SerializeField] int startWealth = 100;
+    [SerializeField] int startBalance = 100;
     [Header("Stats")]
     [SerializeField] int currentHealth;
-    [SerializeField] int currentWealth;
-    public int CurrentWealth {get {return currentWealth;}}
+    [SerializeField] int currentBalance;
+    public int CurrentBalance {get {return currentBalance;}}
 
     void Start()
     {
         currentHealth = startHealth;
-        currentWealth = startWealth;
+        currentBalance = startBalance;
         UpdateGUI();
     }
 
@@ -45,7 +45,7 @@ public class ScoreHandler : MonoBehaviour
     }
 
     public void ModifyWealth(int _amount){
-        currentWealth += _amount;
+        currentBalance += _amount;
         UpdateGUI();
         // Debug.Log($"Wealth modification. Change:{_amount}. Current: {wealthAmount}");
     }
@@ -57,7 +57,7 @@ public class ScoreHandler : MonoBehaviour
     }
 
     void UpdateGUI(){
-        dispayBalance.text = $"Gold: {currentWealth.ToString()}";
+        dispayBalance.text = $"Gold: {currentBalance.ToString()}";
     }
 
 }

@@ -15,6 +15,8 @@ public class Tile : MonoBehaviour
     }
 
     private void OnMouseDown() {
-        buildingHandler.BuildTower(gameObject);
+        //buildingHandler.BuildTower(gameObject);
+        buildingHandler.OpenBuildMenu(gameObject);
+
     }
 }
