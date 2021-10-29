@@ -8,6 +8,8 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
+    public Dictionary<Vector2Int, Node> Grid { get; set; }
+
     private void Awake()
     {
         CreateGrid();
@@ -21,8 +23,25 @@ public class GridManager : MonoBehaviour
             {
                 Vector2Int coordinates = new Vector2Int(x, y);
                 grid.Add(coordinates, new Node(coordinates, true));
-                Debug.Log(grid[coordinates].coordinates + "*" + grid[coordinates].isWalkable);
             }
         }
     }
+
+    public Node GetNode(Vector2Int _coordinates)
+    {
+        if (grid.ContainsKey(_coordinates))
+        {
+            return grid[_coordinates];
+        }
+        return null;
+    }
+
+    public void SetNode(Vector2Int _coordinates, Node node)
+    {
+        if (grid.ContainsKey(_coordinates))
+        {
+            grid[_coordinates] = node;
+        }
+    }
+
 }

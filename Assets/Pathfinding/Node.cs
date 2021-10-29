@@ -9,7 +9,7 @@ public class Node
     public bool isWalkable;
     public bool isExplored;
     public bool isPath;
-    public Node parenNode;
+    public Node parentNode;
 
     public Node(Vector2Int coordinates, bool isWalkable)
     {

@@ -6,56 +6,88 @@ using TMPro;
 [ExecuteAlways]
 public class CoordinateLabeler : MonoBehaviour
 {
-[SerializeField] Color defaultColor = Color.white;
-[SerializeField] Color occupiedColor = Color.gray;
-Tile tile;
-TextMeshPro label;
-Vector2Int coord = new Vector2Int();
+    [SerializeField] Color defaultColor = Color.white;
+    [SerializeField] Color occupiedColor = Color.gray;
+    [SerializeField] Color exploredColor = Color.yellow;
+    [SerializeField] Color pathColor = new Color(1f, 0.5f, 0f);
 
-private void Awake() {
-    tile    = GetComponentInParent<Tile>();
-    label   = GetComponent<TextMeshPro>();
-    label.enabled = false;
-    UpdateLabelName();
-}
+    TextMeshPro label;
+    Vector2Int coord = new Vector2Int();
+    GridManager gridManager;
 
-private void Update() {
 
-    ToggleLabels();
-    
-    if(label.enabled){
-        UpdateLabelColor();
-    }
-    
-    if(!Application.isPlaying){
-        label.enabled = true;
+    private void Awake()
+    {
+        gridManager = FindObjectOfType<GridManager>();
+        label = GetComponent<TextMeshPro>();
+        label.enabled = false;
         UpdateLabelName();
-        UpdateObjectName();
     }
-}
 
-void ToggleLabels(){
-    if(Input.GetKeyDown(KeyCode.L)){
-        label.enabled = !label.enabled;
+    private void Update()
+    {
+
+        ToggleLabels();
+
+        if (label.enabled)
+        {
+            UpdateLabelColor();
+        }
+
+        if (!Application.isPlaying)
+        {
+            label.enabled = true;
+            UpdateLabelName();
+            UpdateObjectName();
+        }
     }
-}
 
-void UpdateLabelName(){
-    coord.x = Mathf.RoundToInt(transform.parent.position.x/UnityEditor.EditorSnapSettings.move.x);
-    coord.y = Mathf.RoundToInt(transform.parent.position.z/UnityEditor.EditorSnapSettings.move.z);
-
-    label.text = $"{coord}";
-}
-
-void UpdateLabelColor(){
-    label.color = defaultColor;
-    if(!tile.IsPlaceable){
-        label.color = occupiedColor;
+    void ToggleLabels()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            label.enabled = !label.enabled;
+        }
     }
-}
 
-void UpdateObjectName(){
-    transform.parent.name = coord.ToString();
-}
+    void UpdateLabelName()
+    {
+        coord.x = Mathf.RoundToInt(transform.parent.position.x / UnityEditor.EditorSnapSettings.move.x);
+        coord.y = Mathf.RoundToInt(transform.parent.position.z / UnityEditor.EditorSnapSettings.move.z);
+
+        label.text = $"{coord}";
+    }
+
+    void UpdateLabelColor()
+    {
+        if (gridManager == null) { return; }
+
+        Node node = gridManager.GetNode(coord);
+
+        if (node == null) { return; }
+
+        //Debug.Log($"Coloring {node.coordinates}");
+        if (!node.isWalkable)
+        {
+            label.color = occupiedColor;
+        }
+        else if (node.isPath)
+        {
+            label.color = pathColor;
+        }
+        else if (node.isExplored)
+        {
+            label.color = exploredColor;
+        }
+        else
+        {
+            label.color = defaultColor;
+        }
+    }
+
+    void UpdateObjectName()
+    {
+        transform.parent.name = coord.ToString();
+    }
 
 }
