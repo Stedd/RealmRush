@@ -72,6 +72,10 @@ PrefabInstance:
       value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5722631354108134187, guid: 8a965e088bae16643aab3d07ccfd5e2e, type: 3}
+      propertyPath: weaponRange
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722631354108134187, guid: 8a965e088bae16643aab3d07ccfd5e2e, type: 3}
       propertyPath: projectileSpeed
       value: 20
       objectReference: {fileID: 0}

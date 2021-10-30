@@ -16,7 +16,11 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Stats")] 
     [SerializeField] int currentHealth;
-    // Start is called before the first frame update
+
+    #region Public
+    public int Health { get=> currentHealth;}
+    #endregion
+
     void OnEnable()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();

@@ -14,10 +14,11 @@ public class Tower : MonoBehaviour
     [SerializeField] Transform weapon;
 
     [Header("WeaponParameters")]
-    [SerializeField] float maxDistance = 40f;
+    [SerializeField] float weaponRange = 40f;
     [SerializeField] int damage = 1;
     [SerializeField] float fireRate = 1;
     [SerializeField] float projectileSpeed = 5;
+    [SerializeField] TargetStrategy targetStrategy = TargetStrategy.LowestHealth;
 
     [Header("BuildParameters")]
     [SerializeField] int cost = 30;
@@ -27,6 +28,7 @@ public class Tower : MonoBehaviour
     [SerializeField] float score = 0f;
 
     #region Privates
+    [SerializeField] enum TargetStrategy { ClosestEnemy, LowestHealth };
     private GameObject closestEnemy;
     #endregion
 
@@ -63,19 +65,42 @@ public class Tower : MonoBehaviour
 
     private void FindAndShootClosestEnemy()
     {
-        // enemies = enemyHandler.ReturnAllEnemies();
-        float lowestDist = Mathf.Infinity;
+        float bestValue = Mathf.Infinity;
         bool targetFound = false;
-        foreach (GameObject enemy in enemyHandler.ReturnAllEnemies())
+        List<GameObject> enemies = enemyHandler.ReturnAllEnemies();
+
+        foreach (GameObject enemy in enemies)
         {
-            float distanceToCurrentTarget = Vector3.Magnitude(enemy.transform.position - transform.position);
-            if (distanceToCurrentTarget < lowestDist && distanceToCurrentTarget < maxDistance)
+            float distanceToTarget = Vector3.Magnitude(enemy.transform.position - transform.position);
+
+            bool withinRange = distanceToTarget < weaponRange;
+            if (withinRange)
             {
-                targetFound = true;
-                lowestDist = distanceToCurrentTarget;
-                closestEnemy = enemy;
+                if (targetStrategy == TargetStrategy.ClosestEnemy)
+                {
+                    bool isClosest = distanceToTarget < bestValue;
+                    if (isClosest)
+                    {
+                        targetFound = true;
+                        bestValue = distanceToTarget;
+                        closestEnemy = enemy;
+                    }
+                }
+                if (targetStrategy == TargetStrategy.LowestHealth)
+                {
+                    float enemyHealth = enemy.GetComponent<EnemyHealth>().Health;
+
+                    bool isLowestHealth = enemyHealth < bestValue;
+                    if (isLowestHealth)
+                    {
+                        targetFound = true;
+                        bestValue = enemyHealth;
+                        closestEnemy = enemy;
+                    }
+                }
             }
         }
+
         if (targetFound)
         {
             weapon.transform.LookAt(closestEnemy.transform.position);
@@ -86,7 +111,6 @@ public class Tower : MonoBehaviour
     void ShootProjectile(bool _state)
     {
         var emissionModule = _projectile.emission;
-        //emissionModule.rateOverTime = fireRate;
         emissionModule.enabled = _state;
     }
 
