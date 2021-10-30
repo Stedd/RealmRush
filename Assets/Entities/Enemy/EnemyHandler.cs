@@ -4,45 +4,74 @@ using UnityEngine;
 
 public class EnemyHandler : MonoBehaviour
 {
+    [Header("Assigned on start")]
+    [SerializeField] GridManager gridManager;
+
+
     [Header("Parameters")]
-    [SerializeField][Range(0.1f,2f)]float spawnRate = 1f;
+    [SerializeField] [Range(0.1f, 60f)] float spawnRate = 60f;
     [SerializeField] int objectPoolSize = 15;
 
     [Header("Prefabs")]
     [SerializeField] GameObject objectPool;
     [SerializeField] List<GameObject> enemyPrefabs = new List<GameObject>();
-    
+
     [Header("Lists")]
-    [SerializeField] List<Tile> path = new List<Tile>();
+    [SerializeField] List<Node> path = new List<Node>();
     [SerializeField] List<GameObject> enemyPools = new List<GameObject>();
     [SerializeField] List<GameObject> allEnemies = new List<GameObject>();
 
-    private void Start() {
-        GetPath();
+
+    public List<Node> Path { get { return path; } }
+
+    private void Awake()
+    {
+        gridManager = FindObjectOfType<GridManager>();
+    }
+
+    private void Start()
+    {
+        gridManager.CalculateNewPath();
+
         PopulateObjectPools();
-        // SpawnNewEnemy();
+
         StartCoroutine(Spawner());
     }
 
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.N)){
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.N))
+        {
             SpawnNewEnemy();
         }
     }
 
-    void GetPath()
+    public void SetPath(List<Node> _nodes)
     {
         path.Clear();
-        //Convert Array to List
-        GameObject pathParent = GameObject.FindGameObjectWithTag("Path");
-        Tile[] pathArray = pathParent.GetComponentsInChildren<Tile>();
-        foreach (Tile _path in pathArray)
+
+        foreach (Node _node in _nodes)
         {
-            path.Add(_path);
+            path.Add(_node);
+        }
+
+        UpdateEnemyPath();
+
+    }
+
+    void UpdateEnemyPath()
+    {
+        foreach (GameObject _pool in enemyPools)
+        {
+            foreach (EnemyMovement _enemy in _pool.GetComponentsInChildren<EnemyMovement>())
+            {
+                _enemy.SetPath(path);
+            }
         }
     }
 
-    void PopulateObjectPools(){
+    void PopulateObjectPools()
+    {
         foreach (GameObject enemy in enemyPrefabs)
         {
             GameObject newPool = Instantiate(objectPool, transform);
@@ -63,23 +92,26 @@ public class EnemyHandler : MonoBehaviour
         allEnemies.Add(_enemy);
     }
 
-    public void RemoveEnemy(GameObject _enemy){
+    public void RemoveEnemy(GameObject _enemy)
+    {
         allEnemies.Remove(_enemy);
     }
 
-    public List<GameObject> ReturnAllEnemies(){
+    public List<GameObject> ReturnAllEnemies()
+    {
         return allEnemies;
     }
 
     void SpawnNewEnemy()
     {
-        int spawnEnemyIndex = Mathf.RoundToInt(Random.Range(-0.49f,2.49f));
+        int spawnEnemyIndex = Mathf.RoundToInt(Random.Range(-0.49f, 2.49f));
         enemyPools[spawnEnemyIndex].GetComponent<ObjectPool>().EnableFirstAvailableObject();
     }
 
     IEnumerator Spawner()
     {
-        while(true){
+        while (true)
+        {
             SpawnNewEnemy();
             yield return new WaitForSeconds(spawnRate);
         }

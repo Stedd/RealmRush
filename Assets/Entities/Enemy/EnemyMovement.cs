@@ -5,46 +5,74 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour
 {
     [Header("Parameters")]
-    [SerializeField] [Range(0f, 5f)]float speed = 1f;
+    [SerializeField] [Range(0f, 5f)] float speed = 1f;
     [SerializeField] int damage = 1;
 
 
     [SerializeField] EnemyHandler enemyHandler;
     [SerializeField] ScoreHandler scoreHandler;
-    [SerializeField] List<Tile> path;
+    [SerializeField] List<Node> path;
 
     Vector3 startPosition;
     Vector3 endPosition;
     float travelPercent = 0f;
+    bool newPath;
+
+    private IEnumerator followPath;
 
     void OnEnable()
     {
-        transform.localPosition = path[0].transform.localPosition;
-        transform.LookAt(path[1].transform.localPosition);
+        transform.localPosition = GetVector3(path[0].coordinates);
+        transform.LookAt(GetVector3(path[1].coordinates));
         enemyHandler = FindObjectOfType<EnemyHandler>();
         enemyHandler.AddEnemyToAllEnemies(gameObject);
-        
+
         scoreHandler = FindObjectOfType<ScoreHandler>();
-        StartCoroutine(FollowPath());
+
+        followPath = FollowPath();
+
+        SetPath(enemyHandler.Path);
+
+        StartCoroutine(followPath);
     }
 
-    public void SetPath(List<Tile> _path){
-        path = _path ;
+    public void SetPath(List<Node> _path)
+    {
+        path.Clear();
+
+        foreach (Node _node in _path)
+        {
+            path.Add(_node);
+        }
+
+        //if (gameObject.activeSelf)
+        //{
+        //    StopCoroutine(followPath);
+        //    //StartCoroutine(FollowPath());
+        //}
+
+        ////newPath = true;
+        //if (gameObject.activeSelf)
+        //{
+        //    StartCoroutine(FollowPath());
+        //}
     }
 
     IEnumerator FollowPath()
     {
-        foreach (Tile waypoint in path)
+        //if (newPath) { yield break; }
+
+        foreach (Node waypoint in path)
         {
-            startPosition   = transform.position;
-            endPosition     = waypoint.transform.position;
-            travelPercent   = 0;
+            startPosition = transform.position;
+            endPosition = GetVector3(waypoint.coordinates);
+            travelPercent = 0;
             transform.LookAt(endPosition);
 
             // Debug.Log($"start: {startPosition}. end: {endPosition}");
-            while(travelPercent <1f)
+            while (travelPercent < 1f)
             {
-                travelPercent += Time.deltaTime*speed;
+                travelPercent += Time.deltaTime * speed;
                 transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
                 yield return new WaitForEndOfFrame();
             }
@@ -60,6 +88,11 @@ public class EnemyMovement : MonoBehaviour
         enemyHandler.RemoveEnemy(gameObject);
         //Destroy(gameObject);
         gameObject.SetActive(false);
+    }
+
+    private Vector3 GetVector3(Vector2Int _coord)
+    {
+        return new Vector3((float)_coord.x, 0f, (float)_coord.y) * 10f;
     }
 
 }

@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
+    [Header("Assigned on start")]
+    [SerializeField] PathFinder pathFinder;
+    [SerializeField] EnemyHandler enemyHandler;
+
+    [SerializeField] Tile[] tiles;
     [SerializeField] Vector2Int gridSize;
 
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
     public Dictionary<Vector2Int, Node> Grid { get; set; }
-
-    private void Awake()
+    public Vector2Int GridSize { get { return gridSize; }}
+    void Awake()
     {
+        pathFinder = FindObjectOfType<PathFinder>();
+        enemyHandler = FindObjectOfType<EnemyHandler>();
+        tiles = FindObjectsOfType<Tile>();
+
         CreateGrid();
+        CopyTileIsWalkableToGrid();
     }
 
     void CreateGrid()
@@ -27,6 +37,44 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    void CopyTileIsWalkableToGrid()
+    {
+        foreach (Tile _tile in tiles)
+        {
+            grid[GetVector2XZPosition(_tile)].isWalkable = _tile.IsWalkable;
+        }
+    }
+
+    void ResetExploredStatus()
+    {
+        for (int x = 0; x < gridSize.x; x++)
+        {
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                Vector2Int coordinates = new Vector2Int(x, y);
+                grid[coordinates].isPath = false;
+                grid[coordinates].isExplored = false;
+                grid[coordinates].parentNode = null;
+            }
+        }
+    }
+
+    public void CalculateNewPath()
+    {
+        ResetExploredStatus();
+        pathFinder.CalculateNewPath();
+        enemyHandler.SetPath(pathFinder.Path);
+    }
+
+    public Node GetNode(Node _node)
+    {
+        if (grid.ContainsKey(_node.coordinates))
+        {
+            return grid[_node.coordinates];
+        }
+        return null;
+    }
+
     public Node GetNode(Vector2Int _coordinates)
     {
         if (grid.ContainsKey(_coordinates))
@@ -34,6 +82,14 @@ public class GridManager : MonoBehaviour
             return grid[_coordinates];
         }
         return null;
+    }
+
+    public void SetNode(Node node)
+    {
+        if (grid.ContainsKey(node.coordinates))
+        {
+            grid[node.coordinates] = node;
+        }
     }
 
     public void SetNode(Vector2Int _coordinates, Node node)
@@ -44,4 +100,8 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public Vector2Int GetVector2XZPosition(Tile _o)
+    {
+        return new Vector2Int((Mathf.RoundToInt(_o.transform.position.x) / 10), (Mathf.RoundToInt(_o.transform.position.z / 10)));
+    }
 }

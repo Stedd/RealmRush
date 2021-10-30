@@ -4,27 +4,41 @@ using UnityEngine;
 
 public class PathFinder : MonoBehaviour
 {
-    [SerializeField] Node currentSearchNode;
     [SerializeField] Node startNode;
     [SerializeField] Node goalNode;
-    Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.down };
 
-    GridManager gridManager;
+    #region Private
+
+    Node currentSearchNode;
+    private Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
+    private GridManager gridManager;
+    private List<Node> path = new List<Node>();
+
+    #endregion
+
+    #region Public
+
+    public List<Node> Path { get { return path; } }
+
+    #endregion
+
     private void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void CalculateNewPath()
     {
-        startNode = currentSearchNode;
         ExploreNeighbours();
     }
 
     private void ExploreNeighbours()
     {
+        startNode = gridManager.GetNode(startNode);
+        goalNode = gridManager.GetNode(goalNode);
+        currentSearchNode = startNode;
         List<Node> neighbours = new List<Node>();
+        //Node neighbourNode  = new Node();
         int safeGuard = 0;
         bool goalReached = false;
 
@@ -42,10 +56,19 @@ public class PathFinder : MonoBehaviour
                     }
                 }
             }
-            //Debug.Log($"Current Searchnode: {currentSearchNode.coordinates} ** isExplored: {currentSearchNode.isExplored} ** Starting looking in all directions");
+            Debug.Log($"Current Searchnode: {currentSearchNode.coordinates}");
             foreach (Vector2Int _direction in directions)
             {
-                Node neighbourNode = gridManager.GetNode(currentSearchNode.coordinates + _direction);
+                Node neighbourNode = new Node();
+                neighbourNode.coordinates = currentSearchNode.coordinates + _direction;
+                if (NeighbourWithinGrid(neighbourNode))
+                {
+                    neighbourNode = gridManager.GetNode(neighbourNode.coordinates);
+                }
+                else
+                {
+                    Debug.Log($"Neighbour: {neighbourNode.coordinates} is Outside Grid");
+                }
                 if (IsLegalNeighbour(neighbourNode))
                 {
                     if (neighbourNode.coordinates == goalNode.coordinates)
@@ -69,17 +92,21 @@ public class PathFinder : MonoBehaviour
 
                     if (!nodeIsAlreadyInList)
                     {
-                        //Debug.Log($"Adding Neighbour: {neighbourNode.coordinates} ** isExplored: {neighbourNode.isExplored}");
+                        Debug.Log($"Adding Neighbour: {neighbourNode.coordinates}");
                         neighbourNode.parentNode = currentSearchNode;
                         UpdateGridNode(neighbourNode);
                         neighbours.Add(neighbourNode);
                     }
                     else
                     {
-                        //Debug.Log($"Neighbour: {neighbourNode.coordinates} is already in Neighbours");
+                        Debug.Log($"Neighbour: {neighbourNode.coordinates} is already in Neighbours");
                     }
 
                 }
+                else
+                {
+                    Debug.Log($"Neighbour: {neighbourNode.coordinates} is NOT LEGAL");
+                }                
             }
             currentSearchNode.isExplored = true;
             UpdateGridNode(currentSearchNode);
@@ -91,7 +118,8 @@ public class PathFinder : MonoBehaviour
 
     private void CreatePath()
     {
-        List<Node> path = new List<Node>();
+        path.Clear();
+
         Node _parentNode = goalNode.parentNode;
         goalNode.isPath = true;
         UpdateGridNode(goalNode);
@@ -121,19 +149,31 @@ public class PathFinder : MonoBehaviour
 
         path.Reverse();
 
-        foreach (Node _node in path)
-        {
-            Debug.Log($"Path: {_node.coordinates}");
-        }
+        //foreach (Node _node in path)
+        //{
+        //    Debug.Log($"Path: {_node.coordinates}");
+        //}
     }
 
     private void UpdateGridNode(Node node)
     {
-        gridManager.SetNode(node.coordinates, node);
+        gridManager.SetNode(node);
     }
 
     private bool IsLegalNeighbour(Node neighbourNode)
     {
-        return neighbourNode != null && neighbourNode.isExplored == false && neighbourNode.coordinates.x >= 0 && neighbourNode.coordinates.y >= 0;
+        return
+            neighbourNode != null &&
+            !neighbourNode.isExplored &&
+            neighbourNode.isWalkable;
+    }
+    private bool NeighbourWithinGrid(Node neighbourNode)
+    {
+        return
+            neighbourNode != null &&
+            neighbourNode.coordinates.x >= 0 &&
+            neighbourNode.coordinates.y >= 0 &&
+            neighbourNode.coordinates.x <= gridManager.GridSize.x-1 &&
+            neighbourNode.coordinates.y <= gridManager.GridSize.y-1;
     }
 }

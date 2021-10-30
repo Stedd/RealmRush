@@ -45,6 +45,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dispayBalance: {fileID: 0}
   startHealth: 10
-  startWealth: 100
+  startBalance: 150
   currentHealth: 0
-  currentWealth: 0
+  currentBalance: 0

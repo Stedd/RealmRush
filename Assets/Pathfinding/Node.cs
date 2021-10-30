@@ -11,6 +11,11 @@ public class Node
     public bool isPath;
     public Node parentNode;
 
+    public Node()
+    {
+        //this.coordinates = coordinates;
+        //this.isWalkable = isWalkable;
+    }
     public Node(Vector2Int coordinates, bool isWalkable)
     {
         this.coordinates = coordinates;
