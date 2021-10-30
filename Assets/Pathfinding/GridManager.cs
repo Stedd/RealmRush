@@ -13,8 +13,8 @@ public class GridManager : MonoBehaviour
 
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
-    public Dictionary<Vector2Int, Node> Grid { get; set; }
-    public Vector2Int GridSize { get { return gridSize; }}
+    public Dictionary<Vector2Int, Node> Grid { get => grid; }
+    public Vector2Int GridSize { get { return gridSize; } }
     void Awake()
     {
         pathFinder = FindObjectOfType<PathFinder>();
@@ -47,15 +47,11 @@ public class GridManager : MonoBehaviour
 
     void ResetExploredStatus()
     {
-        for (int x = 0; x < gridSize.x; x++)
+        foreach (KeyValuePair<Vector2Int, Node> _entry in grid)
         {
-            for (int y = 0; y < gridSize.y; y++)
-            {
-                Vector2Int coordinates = new Vector2Int(x, y);
-                grid[coordinates].isPath = false;
-                grid[coordinates].isExplored = false;
-                grid[coordinates].parentNode = null;
-            }
+            _entry.Value.parentNode = null;
+            _entry.Value.isPath = false;
+            _entry.Value.isExplored = false;
         }
     }
 

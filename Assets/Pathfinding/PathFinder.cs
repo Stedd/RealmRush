@@ -12,7 +12,10 @@ public class PathFinder : MonoBehaviour
     Node currentSearchNode;
     private Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
     private GridManager gridManager;
+
+    private Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
     private List<Node> path = new List<Node>();
+    private Queue<Node> neighbours = new Queue<Node>();
 
     #endregion
 
@@ -25,6 +28,10 @@ public class PathFinder : MonoBehaviour
     private void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
+        if (gridManager != null)
+        {
+            grid = gridManager.Grid;
+        }
     }
 
     public void CalculateNewPath()
@@ -34,36 +41,31 @@ public class PathFinder : MonoBehaviour
 
     private void ExploreNeighbours()
     {
-        startNode = gridManager.GetNode(startNode);
-        goalNode = gridManager.GetNode(goalNode);
-        currentSearchNode = startNode;
-        List<Node> neighbours = new List<Node>();
-        //Node neighbourNode  = new Node();
+        neighbours.Clear();
+
+        startNode = grid[startNode.coordinates];
+        goalNode = grid[goalNode.coordinates];
+
+        neighbours.Enqueue(startNode);
+
         int safeGuard = 0;
         bool goalReached = false;
 
         while (!goalReached && safeGuard < 1000)
         {
-            if (neighbours.Count > 0)
-            {
-                bool newSearchNodeSelected = false;
-                foreach (Node _neighbour in neighbours)
-                {
-                    if (!_neighbour.isExplored && !newSearchNodeSelected)
-                    {
-                        currentSearchNode = _neighbour;
-                        newSearchNodeSelected = true;
-                    }
-                }
-            }
+
+            currentSearchNode = neighbours.Dequeue();
+
+
             Debug.Log($"Current Searchnode: {currentSearchNode.coordinates}");
             foreach (Vector2Int _direction in directions)
             {
                 Node neighbourNode = new Node();
                 neighbourNode.coordinates = currentSearchNode.coordinates + _direction;
-                if (NeighbourWithinGrid(neighbourNode))
+
+                if (grid.ContainsKey(neighbourNode.coordinates))
                 {
-                    neighbourNode = gridManager.GetNode(neighbourNode.coordinates);
+                    neighbourNode = grid[neighbourNode.coordinates];
                 }
                 else
                 {
@@ -74,8 +76,7 @@ public class PathFinder : MonoBehaviour
                     if (neighbourNode.coordinates == goalNode.coordinates)
                     {
                         Debug.Log("Goal Reached!");
-                        goalNode.parentNode = currentSearchNode;
-                        UpdateGridNode(goalNode);
+                        grid[goalNode.coordinates].parentNode = currentSearchNode;
                         goalReached = true;
                         CreatePath();
                         break;
@@ -93,9 +94,8 @@ public class PathFinder : MonoBehaviour
                     if (!nodeIsAlreadyInList)
                     {
                         Debug.Log($"Adding Neighbour: {neighbourNode.coordinates}");
-                        neighbourNode.parentNode = currentSearchNode;
-                        UpdateGridNode(neighbourNode);
-                        neighbours.Add(neighbourNode);
+                        grid[neighbourNode.coordinates].parentNode = currentSearchNode;
+                        neighbours.Enqueue(neighbourNode);
                     }
                     else
                     {
@@ -106,10 +106,9 @@ public class PathFinder : MonoBehaviour
                 else
                 {
                     Debug.Log($"Neighbour: {neighbourNode.coordinates} is NOT LEGAL");
-                }                
+                }
             }
-            currentSearchNode.isExplored = true;
-            UpdateGridNode(currentSearchNode);
+            grid[currentSearchNode.coordinates].isExplored = true;
             //Debug.Log($"Current Searchnode: { currentSearchNode.coordinates} ** isExplored: {currentSearchNode.isExplored} **THIS NODE SHOULD NOT APPEAR AGAIN");
             safeGuard++;
         }
@@ -120,27 +119,24 @@ public class PathFinder : MonoBehaviour
     {
         path.Clear();
 
-        Node _parentNode = goalNode.parentNode;
-        goalNode.isPath = true;
-        UpdateGridNode(goalNode);
-        path.Add(goalNode);
+        Node _parentNode = grid[goalNode.coordinates].parentNode;
+        grid[goalNode.coordinates].isPath = true;
+        path.Add(grid[goalNode.coordinates]);
 
         bool reachedEnd = false;
         int safeGuard = 0;
         while (!reachedEnd && safeGuard < 100)
         {
-            Node nextNode = gridManager.GetNode(_parentNode.coordinates);
+            Node nextNode = grid[_parentNode.coordinates];
             if (nextNode.coordinates == startNode.coordinates)
             {
-                startNode.isPath = true;
-                UpdateGridNode(startNode);
+                grid[startNode.coordinates].isPath = true;
                 path.Add(startNode);
                 reachedEnd = true;
             }
             else
             {
-                nextNode.isPath = true;
-                UpdateGridNode(nextNode);
+                grid[nextNode.coordinates].isPath = true;
                 path.Add(nextNode);
                 _parentNode = nextNode.parentNode;
             }
@@ -166,14 +162,5 @@ public class PathFinder : MonoBehaviour
             neighbourNode != null &&
             !neighbourNode.isExplored &&
             neighbourNode.isWalkable;
-    }
-    private bool NeighbourWithinGrid(Node neighbourNode)
-    {
-        return
-            neighbourNode != null &&
-            neighbourNode.coordinates.x >= 0 &&
-            neighbourNode.coordinates.y >= 0 &&
-            neighbourNode.coordinates.x <= gridManager.GridSize.x-1 &&
-            neighbourNode.coordinates.y <= gridManager.GridSize.y-1;
     }
 }
