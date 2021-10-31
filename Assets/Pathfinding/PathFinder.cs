@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class PathFinder : MonoBehaviour
 {
-    [SerializeField] Node startNode;
-    [SerializeField] Node goalNode;
+    [SerializeField] Vector2Int startNodeCoord;
+    [SerializeField] Vector2Int goalNodeCoord;
 
     #region Private
-
-    Node currentSearchNode;
-    private Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
     private GridManager gridManager;
 
-    private Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
-    private List<Node> path = new List<Node>();
-    private Queue<Node> neighbours = new Queue<Node>();
+    private Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
+    private Node startNode;
+    private Node goalNode;
+    private Node currentSearchNode;
+
+    private Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
+    private Dictionary<Vector2Int, Node> reached = new Dictionary<Vector2Int, Node>();
+
+    private Queue<Node> frontier = new Queue<Node>();
+
+    private List<Node> path = new List<Node>();
     #endregion
 
     #region Public
@@ -32,135 +37,94 @@ public class PathFinder : MonoBehaviour
         {
             grid = gridManager.Grid;
         }
+
+        CalculateNewPath(startNodeCoord, goalNodeCoord);
     }
 
-    public void CalculateNewPath()
+    public List<Node> CalculateNewPath(Vector2Int _startNodeCoord, Vector2Int _goalNodeCoord)
     {
-        ExploreNeighbours();
+        startNode = grid[_startNodeCoord];
+        startNodeCoord = startNode.coordinates;
+
+        goalNode = grid[_goalNodeCoord];
+        goalNodeCoord = goalNode.coordinates;
+
+        BreadthFirstSearch();
+
+        return path;
     }
 
-    private void ExploreNeighbours()
+
+    void BreadthFirstSearch()
     {
-        neighbours.Clear();
+        bool isRunning = true;
 
-        startNode = grid[startNode.coordinates];
-        goalNode = grid[goalNode.coordinates];
+        frontier.Enqueue(startNode);
+        reached.Add(startNode.coordinates, startNode);
 
-        neighbours.Enqueue(startNode);
-
-        int safeGuard = 0;
-        bool goalReached = false;
-
-        while (!goalReached && safeGuard < 1000)
+        while (frontier.Count > 0 && isRunning)
         {
-
-            currentSearchNode = neighbours.Dequeue();
-
-
-            Debug.Log($"Current Searchnode: {currentSearchNode.coordinates}");
-            foreach (Vector2Int _direction in directions)
+            currentSearchNode = frontier.Dequeue();
+            ExploreNeighbours2(currentSearchNode);
+            if (currentSearchNode.coordinates == goalNode.coordinates)
             {
-                Node neighbourNode = new Node();
-                neighbourNode.coordinates = currentSearchNode.coordinates + _direction;
-
-                if (grid.ContainsKey(neighbourNode.coordinates))
-                {
-                    neighbourNode = grid[neighbourNode.coordinates];
-                }
-                else
-                {
-                    Debug.Log($"Neighbour: {neighbourNode.coordinates} is Outside Grid");
-                }
-                if (IsLegalNeighbour(neighbourNode))
-                {
-                    if (neighbourNode.coordinates == goalNode.coordinates)
-                    {
-                        Debug.Log("Goal Reached!");
-                        grid[goalNode.coordinates].parentNode = currentSearchNode;
-                        goalReached = true;
-                        CreatePath();
-                        break;
-                    }
-
-                    bool nodeIsAlreadyInList = false;
-                    foreach (Node _node in neighbours)
-                    {
-                        if (neighbourNode.coordinates == _node.coordinates)
-                        {
-                            nodeIsAlreadyInList = true;
-                        }
-                    }
-
-                    if (!nodeIsAlreadyInList)
-                    {
-                        Debug.Log($"Adding Neighbour: {neighbourNode.coordinates}");
-                        grid[neighbourNode.coordinates].parentNode = currentSearchNode;
-                        neighbours.Enqueue(neighbourNode);
-                    }
-                    else
-                    {
-                        Debug.Log($"Neighbour: {neighbourNode.coordinates} is already in Neighbours");
-                    }
-
-                }
-                else
-                {
-                    Debug.Log($"Neighbour: {neighbourNode.coordinates} is NOT LEGAL");
-                }
+                isRunning = false;
             }
-            grid[currentSearchNode.coordinates].isExplored = true;
-            //Debug.Log($"Current Searchnode: { currentSearchNode.coordinates} ** isExplored: {currentSearchNode.isExplored} **THIS NODE SHOULD NOT APPEAR AGAIN");
-            safeGuard++;
+        }
+
+        BuildPath();
+
+    }
+
+    void ExploreNeighbours2(Node _currentSearchNode)
+    {
+        List<Node> neighbors = new List<Node>();
+
+        foreach (Vector2Int direction in directions)
+        {
+            Vector2Int neighborCoord = _currentSearchNode.coordinates + direction;
+
+            bool neighborIsOnGrid = grid.ContainsKey(neighborCoord);
+            if (neighborIsOnGrid)
+            {
+                neighbors.Add(grid[neighborCoord]);
+            }
+        }
+
+        foreach (Node neighbor in neighbors)
+        {
+            bool isNotReachedBefore = !reached.ContainsKey(neighbor.coordinates);
+            bool isWalkable = neighbor.isWalkable;
+            if (isNotReachedBefore && isWalkable)
+            {
+                reached.Add(neighbor.coordinates, neighbor);
+                reached[neighbor.coordinates].parentNode = currentSearchNode;
+                frontier.Enqueue(neighbor);
+            }
         }
     }
 
-
-    private void CreatePath()
+    void BuildPath()
     {
+        bool isRunning = true;
         path.Clear();
+        Node node = reached[goalNode.coordinates];
+        Vector2Int nodeCoord = node.coordinates;
 
-        Node _parentNode = grid[goalNode.coordinates].parentNode;
-        grid[goalNode.coordinates].isPath = true;
-        path.Add(grid[goalNode.coordinates]);
-
-        bool reachedEnd = false;
-        int safeGuard = 0;
-        while (!reachedEnd && safeGuard < 100)
+        bool reachedEndOfGraph = reached[nodeCoord].parentNode == null;
+        while (!reachedEndOfGraph && isRunning)
         {
-            Node nextNode = grid[_parentNode.coordinates];
-            if (nextNode.coordinates == startNode.coordinates)
+            path.Add(node);
+            grid[nodeCoord].isPath = true;
+            if (node.coordinates == startNode.coordinates)
             {
-                grid[startNode.coordinates].isPath = true;
-                path.Add(startNode);
-                reachedEnd = true;
+                isRunning = false;
             }
             else
             {
-                grid[nextNode.coordinates].isPath = true;
-                path.Add(nextNode);
-                _parentNode = nextNode.parentNode;
+                node = reached[nodeCoord].parentNode;
             }
-            safeGuard++;
         }
-
         path.Reverse();
-
-        //foreach (Node _node in path)
-        //{
-        //    Debug.Log($"Path: {_node.coordinates}");
-        //}
-    }
-
-    private void UpdateGridNode(Node node)
-    {
-        gridManager.SetNode(node);
-    }
-
-    private bool IsLegalNeighbour(Node neighbourNode)
-    {
-        return
-            neighbourNode != null &&
-            !neighbourNode.isExplored &&
-            neighbourNode.isWalkable;
     }
 }

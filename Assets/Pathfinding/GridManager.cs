@@ -10,11 +10,12 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] Tile[] tiles;
     [SerializeField] Vector2Int gridSize;
-
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
 
-    public Dictionary<Vector2Int, Node> Grid { get => grid; }
+
     public Vector2Int GridSize { get { return gridSize; } }
+    public Dictionary<Vector2Int, Node> Grid { get => grid; }
+    
     void Awake()
     {
         pathFinder = FindObjectOfType<PathFinder>();
@@ -58,8 +59,8 @@ public class GridManager : MonoBehaviour
     public void CalculateNewPath()
     {
         ResetExploredStatus();
-        pathFinder.CalculateNewPath();
-        enemyHandler.SetPath(pathFinder.Path);
+        //pathFinder.CalculateNewPath();
+        //enemyHandler.SetPath(pathFinder.Path);
     }
 
     public Node GetNode(Node _node)
