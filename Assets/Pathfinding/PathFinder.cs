@@ -36,7 +36,6 @@ public class PathFinder : MonoBehaviour
     private void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
-        CalculateNewPath();
     }
 
     public List<Node> CalculateNewPath()

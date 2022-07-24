@@ -31,26 +31,30 @@ public class EnemyMovement : MonoBehaviour
         transform.LookAt(GetVector3(path[1].coordinates));
         enemyHandler.AddEnemyToAllEnemies(gameObject);
 
-
         SetPath(enemyHandler.Path);
-
-        followPath = FollowPath();
-        StartCoroutine(followPath);
     }
 
     public void SetPath(List<Node> _path)
     {
+        if (followPath != null)
+        {
+            Debug.Log("Stopping Coroutine");
+            StopCoroutine(followPath);
+        }
+
         path.Clear();
 
         foreach (Node _node in _path)
         {
             path.Add(_node);
         }
+
+        followPath = FollowPath();
+        StartCoroutine(followPath);
     }
 
     IEnumerator FollowPath()
     {
-        //if (newPath) { yield break; }
 
         foreach (Node waypoint in path)
         {
@@ -73,7 +77,6 @@ public class EnemyMovement : MonoBehaviour
 
     void HandleReachedEndOfPath()
     {
-        StopCoroutine(followPath);
         scoreHandler.ModifyHealth(-damage);
         scoreHandler.ModifyWealth(-100);
         enemyHandler.RemoveEnemy(gameObject);

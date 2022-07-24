@@ -62,7 +62,7 @@ public class GridManager : MonoBehaviour
     {
         ResetExploredStatus();
         pathFinder.CalculateNewPath();
-        enemyHandler.SetPath(pathFinder.Path);
+        SetEnemyPath();
     }
 
     public bool CheckForValidPath()
@@ -73,8 +73,13 @@ public class GridManager : MonoBehaviour
         {
             return false;
         }
-        enemyHandler.SetPath(pathFinder.Path);
+        SetEnemyPath();
         return true;
+    }
+
+    private void SetEnemyPath()
+    {
+        enemyHandler.SetPath(pathFinder.Path);
     }
 
     public Node GetNode(Node _node)

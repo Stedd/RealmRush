@@ -55,7 +55,7 @@ public class EnemyHandler : MonoBehaviour
             path.Add(_node);
         }
 
-        //UpdateEnemyPath();
+        UpdateEnemyPath();
     }    
 
     void UpdateEnemyPath()
@@ -80,7 +80,7 @@ public class EnemyHandler : MonoBehaviour
 
             for (int i = 0; i < objectPoolSize; i++)
             {
-                enemy.GetComponent<EnemyMovement>().SetPath(path);
+                enemy.SetActive(false);
                 poolScript.AddObject(enemy);
             }
         }
