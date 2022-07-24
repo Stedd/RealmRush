@@ -14,12 +14,9 @@ public class Node
 
     public Node()
     {
-        //this.coordinates = coordinates;
-        //this.isWalkable = isWalkable;
     }
-    public Node(Vector2Int coordinates, bool isWalkable)
+    public Node(Vector2Int coordinates)
     {
         this.coordinates = coordinates;
-        this.isWalkable = isWalkable;
     }
 }

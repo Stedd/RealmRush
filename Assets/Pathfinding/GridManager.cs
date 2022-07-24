@@ -34,7 +34,7 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < gridSize.y; y++)
             {
                 Vector2Int coordinates = new Vector2Int(x, y);
-                grid.Add(coordinates, new Node(coordinates, true));
+                grid.Add(coordinates, new Node(coordinates));
             }
         }
     }
@@ -50,11 +50,11 @@ public class GridManager : MonoBehaviour
 
     void ResetExploredStatus()
     {
-        foreach (KeyValuePair<Vector2Int, Node> _entry in grid)
+        foreach (KeyValuePair<Vector2Int, Node> _node in grid)
         {
-            _entry.Value.parentNode = null;
-            _entry.Value.isPath = false;
-            _entry.Value.isExplored = false;
+            _node.Value.parentNode = null;
+            _node.Value.isPath = false;
+            _node.Value.isExplored = false;
         }
     }
 
