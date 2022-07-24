@@ -55,7 +55,9 @@ MonoBehaviour:
   projectileSpeed: 5
   targetStrategy: 1
   cost: 30
+  buildTimer: 1
   score: 0
+  buildingParts: []
 --- !u!1 &4415926110232311550
 GameObject:
   m_ObjectHideFlags: 0

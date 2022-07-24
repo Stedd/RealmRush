@@ -68,6 +68,10 @@ PrefabInstance:
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5722631354108134187, guid: 8a965e088bae16643aab3d07ccfd5e2e, type: 3}
+      propertyPath: buildTimer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722631354108134187, guid: 8a965e088bae16643aab3d07ccfd5e2e, type: 3}
       propertyPath: maxDistance
       value: 80
       objectReference: {fileID: 0}

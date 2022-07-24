@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,7 @@ public class Tower : MonoBehaviour
 
     [Header("BuildParameters")]
     [SerializeField] int cost = 30;
+    [SerializeField] float buildTimer = 1;
 
 
     [Header("Stats")]
@@ -30,6 +32,7 @@ public class Tower : MonoBehaviour
     #region Privates
     [SerializeField] enum TargetStrategy { ClosestEnemy, LowestHealth };
     private GameObject targetEnemy;
+    [SerializeField] private Transform[] buildingParts;
     #endregion
 
     #region Publics
@@ -40,11 +43,31 @@ public class Tower : MonoBehaviour
 
     #endregion
 
+    private void Awake()
+    {
+        buildingParts = GetComponentsInChildren<Transform>();
+    }
+
     void Start()
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
         scoreHandler = FindObjectOfType<ScoreHandler>();
         UpdateWeaponParameters(fireRate, projectileSpeed);
+
+        for (int i = 1; i < buildingParts.Length; i++)
+        {
+            buildingParts[i].gameObject.SetActive(false);
+        }
+        StartCoroutine(Build());
+    }
+
+    IEnumerator Build()
+    {
+        for (int i = 1; i < buildingParts.Length; i++)
+        {
+            buildingParts[i].gameObject.SetActive(true);
+            yield return new WaitForSeconds(buildTimer);
+        }
     }
 
     private void UpdateWeaponParameters(float _fireRate, float _projectileSpeed)
