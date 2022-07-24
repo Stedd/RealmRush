@@ -7,7 +7,8 @@ using TMPro;
 public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
-    [SerializeField] Color occupiedColor = Color.gray;
+    [SerializeField] Color buildableColor = Color.black;
+    [SerializeField] Color walkableColor = Color.gray;
     [SerializeField] Color exploredColor = Color.yellow;
     [SerializeField] Color pathColor = new Color(1f, 0.5f, 0f);
 
@@ -67,9 +68,13 @@ public class CoordinateLabeler : MonoBehaviour
         if (node == null) { return; }
 
         //Debug.Log($"Coloring {node.coordinates}");
-        if (!node.isWalkable)
+        if (!node.isBuildable)
         {
-            label.color = occupiedColor;
+            label.color = buildableColor;
+        }
+        else if(!node.isWalkable)
+        {
+            label.color = walkableColor;
         }
         else if (node.isPath)
         {

@@ -27,25 +27,39 @@ public class BuildingHandler : MonoBehaviour
         //Debug.Log($"Placing tower on Tile: {_tileGO.transform.position}");
         //Debug.Log($"Placing tower on Node: {_node.coordinates}");
 
-        if (_node.isWalkable)
+        if (_node.isBuildable)
         {
             if (scoreHandler.CurrentBalance - buildings[buildingSelector].Cost < 0)
             {
                 print("Insufficient Funds!");
+                return;
             }
             else
             {
+                if (_node.isPath)
+                {
+                    _node.isBuildable = false;
+                    _node.isWalkable = false;
+                    gridManager.SetNode(_node);
+                    //gridManager.CalculateNewPath();
+
+                    if (!gridManager.CheckForValidPath())
+                    {
+                        _node.isBuildable = true;
+                        _node.isWalkable = true;
+                        gridManager.SetNode(_node);
+                        print("Not allowed to block path!");
+                        return;
+                    }
+                }
+
                 scoreHandler.ModifyWealth(-buildings[buildingSelector].Cost);
                 Instantiate(buildings[buildingSelector], _tileGO.transform.position, Quaternion.identity, transform);
 
                 _node.isWalkable = false;
+                _node.isBuildable = false;
 
                 gridManager.SetNode(_node);
-
-                if (_node.isPath)
-                {
-                    gridManager.CalculateNewPath();
-                }
             }
         }
     }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Node
 {
     public Vector2Int coordinates;
+    public bool isBuildable;
     public bool isWalkable;
     public bool isExplored;
     public bool isPath;

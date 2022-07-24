@@ -16,20 +16,22 @@ public class EnemyMovement : MonoBehaviour
     Vector3 startPosition;
     Vector3 endPosition;
     float travelPercent = 0f;
-    bool newPath;
 
     private IEnumerator followPath;
+
+    void Awake()
+    {
+        enemyHandler = FindObjectOfType<EnemyHandler>();
+        scoreHandler = FindObjectOfType<ScoreHandler>();
+        followPath = FollowPath();
+    }
 
     void OnEnable()
     {
         transform.localPosition = GetVector3(path[0].coordinates);
         transform.LookAt(GetVector3(path[1].coordinates));
-        enemyHandler = FindObjectOfType<EnemyHandler>();
         enemyHandler.AddEnemyToAllEnemies(gameObject);
 
-        scoreHandler = FindObjectOfType<ScoreHandler>();
-
-        followPath = FollowPath();
 
         SetPath(enemyHandler.Path);
 
@@ -44,18 +46,6 @@ public class EnemyMovement : MonoBehaviour
         {
             path.Add(_node);
         }
-
-        //if (gameObject.activeSelf)
-        //{
-        //    StopCoroutine(followPath);
-        //    //StartCoroutine(FollowPath());
-        //}
-
-        ////newPath = true;
-        //if (gameObject.activeSelf)
-        //{
-        //    StartCoroutine(FollowPath());
-        //}
     }
 
     IEnumerator FollowPath()

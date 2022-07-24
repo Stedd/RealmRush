@@ -11,11 +11,12 @@ public class GridManager : MonoBehaviour
     [SerializeField] Tile[] tiles;
     [SerializeField] Vector2Int gridSize;
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
+    Dictionary<Vector2Int, Node> gridTemp = new Dictionary<Vector2Int, Node>();
 
 
     public Vector2Int GridSize { get { return gridSize; } }
-    public Dictionary<Vector2Int, Node> Grid { get => grid; }
-    
+    public Dictionary<Vector2Int, Node> Grid { get => grid; set => grid = value; }
+
     void Awake()
     {
         pathFinder = FindObjectOfType<PathFinder>();
@@ -23,7 +24,7 @@ public class GridManager : MonoBehaviour
         tiles = FindObjectsOfType<Tile>();
 
         CreateGrid();
-        CopyTileIsWalkableToGrid();
+        CopyTileStatusToGrid();
     }
 
     void CreateGrid()
@@ -38,11 +39,12 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void CopyTileIsWalkableToGrid()
+    void CopyTileStatusToGrid()
     {
         foreach (Tile _tile in tiles)
         {
             grid[GetVector2XZPosition(_tile)].isWalkable = _tile.IsWalkable;
+            grid[GetVector2XZPosition(_tile)].isBuildable = _tile.IsBuildable;
         }
     }
 
@@ -59,8 +61,20 @@ public class GridManager : MonoBehaviour
     public void CalculateNewPath()
     {
         ResetExploredStatus();
-        //pathFinder.CalculateNewPath();
-        //enemyHandler.SetPath(pathFinder.Path);
+        pathFinder.CalculateNewPath();
+        enemyHandler.SetPath(pathFinder.Path);
+    }
+
+    public bool CheckForValidPath()
+    {
+        ResetExploredStatus();
+        pathFinder.CalculateNewPath();
+        if (!pathFinder.PathIsValid)
+        {
+            return false;
+        }
+        enemyHandler.SetPath(pathFinder.Path);
+        return true;
     }
 
     public Node GetNode(Node _node)
