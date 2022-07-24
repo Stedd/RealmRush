@@ -71,17 +71,17 @@ public class EnemyMovement : MonoBehaviour
     IEnumerator FollowPath()
     {
 
-        for (int i = 0; i < path.Count; i++)
+        for (int i = 1; i < path.Count; i++)
         {
             startPosition = transform.position;
             endPosition = GetVector3(path[i].coordinates);
             travelPercent = 0;
             transform.LookAt(endPosition);
-            float distance = Vector3.Distance(startPosition, endPosition);
-            if (Vector3.Distance(startPosition, endPosition) < 10)
-            {
-                travelPercent = 1 - (distance / 10);
-            }
+            //float distance = Vector3.Distance(startPosition, endPosition);
+            //if (Vector3.Distance(startPosition, endPosition) < 10)
+            //{
+            //    travelPercent = 1 - (distance / 10);
+            //}
 
             // Debug.Log($"start: {startPosition}. end: {endPosition}");
             while (travelPercent < 1f)
