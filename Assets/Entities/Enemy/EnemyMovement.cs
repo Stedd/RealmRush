@@ -23,7 +23,6 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
         scoreHandler = FindObjectOfType<ScoreHandler>();
-        followPath = FollowPath();
     }
 
     void OnEnable()
@@ -35,6 +34,7 @@ public class EnemyMovement : MonoBehaviour
 
         SetPath(enemyHandler.Path);
 
+        followPath = FollowPath();
         StartCoroutine(followPath);
     }
 
@@ -73,6 +73,7 @@ public class EnemyMovement : MonoBehaviour
 
     void HandleReachedEndOfPath()
     {
+        StopCoroutine(followPath);
         scoreHandler.ModifyHealth(-damage);
         scoreHandler.ModifyWealth(-100);
         enemyHandler.RemoveEnemy(gameObject);
