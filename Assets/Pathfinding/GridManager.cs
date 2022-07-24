@@ -48,7 +48,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void ResetExploredStatus()
+    public void ResetExploredStatus()
     {
         foreach (KeyValuePair<Vector2Int, Node> _node in grid)
         {
@@ -60,26 +60,18 @@ public class GridManager : MonoBehaviour
 
     public void CalculateNewPath()
     {
-        ResetExploredStatus();
         pathFinder.CalculateNewPath();
-        SetEnemyPath();
     }
 
     public bool CheckForValidPath()
     {
-        ResetExploredStatus();
         pathFinder.CalculateNewPath();
         if (!pathFinder.PathIsValid)
         {
             return false;
         }
-        SetEnemyPath();
+        enemyHandler.NotifyEnemiesOfNewPath();
         return true;
-    }
-
-    private void SetEnemyPath()
-    {
-        enemyHandler.SetPath(pathFinder.Path);
     }
 
     public Node GetNode(Node _node)
@@ -120,4 +112,5 @@ public class GridManager : MonoBehaviour
     {
         return new Vector2Int((Mathf.RoundToInt(_o.transform.position.x) / 10), (Mathf.RoundToInt(_o.transform.position.z / 10)));
     }
+
 }

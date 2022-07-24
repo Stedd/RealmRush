@@ -49,9 +49,11 @@ MonoBehaviour:
   scoreHandler: {fileID: 0}
   _projectile: {fileID: 6695134864757201866}
   weapon: {fileID: 3144582324300694500}
-  maxDistance: 40
+  weaponRange: 40
   damage: 1
   fireRate: 1
+  projectileSpeed: 5
+  targetStrategy: 1
   cost: 30
   score: 0
 --- !u!1 &4415926110232311550

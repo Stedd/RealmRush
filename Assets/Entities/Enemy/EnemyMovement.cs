@@ -11,6 +11,7 @@ public class EnemyMovement : MonoBehaviour
 
     [SerializeField] EnemyHandler enemyHandler;
     [SerializeField] ScoreHandler scoreHandler;
+    [SerializeField] PathFinder pathFinder;
     [SerializeField] List<Node> path;
 
     Vector3 startPosition;
@@ -23,45 +24,64 @@ public class EnemyMovement : MonoBehaviour
     {
         enemyHandler = FindObjectOfType<EnemyHandler>();
         scoreHandler = FindObjectOfType<ScoreHandler>();
+        pathFinder = FindObjectOfType<PathFinder>();
     }
 
     void OnEnable()
     {
-        transform.localPosition = GetVector3(path[0].coordinates);
+        transform.localPosition = GetVector3(pathFinder.GetStartPosition());
+        SetPath(pathFinder.CalculateNewPath(enemyHandler.GetCoordinatesFromPosition(gameObject.transform.position)));
         transform.LookAt(GetVector3(path[1].coordinates));
         enemyHandler.AddEnemyToAllEnemies(gameObject);
 
-        SetPath(enemyHandler.Path);
+        CoroutineStarter();
     }
 
-    public void SetPath(List<Node> _path)
+
+    void RecalculatePath()
     {
         if (followPath != null)
         {
-            Debug.Log("Stopping Coroutine");
+            //Debug.Log("Stopping Coroutine");
             StopCoroutine(followPath);
-        }
 
+        }
+        //Debug.Log($"{this.name} Recalculating path");
+        SetPath(pathFinder.CalculateNewPath(enemyHandler.GetCoordinatesFromPosition(gameObject.transform.position)));
+        CoroutineStarter();
+    }
+
+    private void CoroutineStarter()
+    {
+        followPath = FollowPath();
+        StartCoroutine(followPath);
+    }
+    public void SetPath(List<Node> _path)
+    {
         path.Clear();
 
         foreach (Node _node in _path)
         {
             path.Add(_node);
         }
-
-        followPath = FollowPath();
-        StartCoroutine(followPath);
+        //regenerate start to finish path to not interfere with building
+        pathFinder.CalculateNewPath();
     }
 
     IEnumerator FollowPath()
     {
 
-        foreach (Node waypoint in path)
+        for (int i = 0; i < path.Count; i++)
         {
             startPosition = transform.position;
-            endPosition = GetVector3(waypoint.coordinates);
+            endPosition = GetVector3(path[i].coordinates);
             travelPercent = 0;
             transform.LookAt(endPosition);
+            float distance = Vector3.Distance(startPosition, endPosition);
+            if (Vector3.Distance(startPosition, endPosition) < 10)
+            {
+                travelPercent = 1 - (distance / 10);
+            }
 
             // Debug.Log($"start: {startPosition}. end: {endPosition}");
             while (travelPercent < 1f)

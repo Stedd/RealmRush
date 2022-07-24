@@ -49,6 +49,7 @@ public class BuildingHandler : MonoBehaviour
                         _node.isWalkable = true;
                         gridManager.SetNode(_node);
                         print("Not allowed to block path!");
+                        gridManager.CalculateNewPath();
                         return;
                     }
                 }

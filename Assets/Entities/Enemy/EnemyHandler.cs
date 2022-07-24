@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyHandler : MonoBehaviour
 {
     [Header("Assigned on start")]
+    [SerializeField] PathFinder pathFinder;
     [SerializeField] GridManager gridManager;
 
 
@@ -31,7 +32,7 @@ public class EnemyHandler : MonoBehaviour
 
     private void Start()
     {
-        gridManager.CalculateNewPath();
+        //gridManager.CalculateNewPath();
 
         PopulateObjectPools();
 
@@ -49,7 +50,7 @@ public class EnemyHandler : MonoBehaviour
     public void SetPath(List<Node> _nodes)
     {
         path.Clear();
-
+        
         foreach (Node _node in _nodes)
         {
             path.Add(_node);
@@ -116,4 +117,17 @@ public class EnemyHandler : MonoBehaviour
         }
     }
 
+    public Vector2Int GetCoordinatesFromPosition(Vector3 position)
+    {
+        Vector2Int coordinates = new Vector2Int();
+        coordinates.x = Mathf.RoundToInt(position.x / UnityEditor.EditorSnapSettings.move.x);
+        coordinates.y = Mathf.RoundToInt(position.z / UnityEditor.EditorSnapSettings.move.z);
+
+        return coordinates;
+    }
+
+    public void NotifyEnemiesOfNewPath()
+    {
+        BroadcastMessage("RecalculatePath", SendMessageOptions.DontRequireReceiver);
+    }
 }
