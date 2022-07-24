@@ -12,7 +12,7 @@ public class PathFinder : MonoBehaviour
     private GridManager gridManager;
 
     private Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
-    private Vector2Int[] buildabledirections = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left, new Vector2Int(1,1), new Vector2Int(-1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1) };
+    private Vector2Int[] buildabledirections = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left, new Vector2Int(1, 1), new Vector2Int(-1, 1), new Vector2Int(1, -1), new Vector2Int(-1, -1) };
 
     private Node startNode;
     private Node goalNode;
@@ -79,7 +79,7 @@ public class PathFinder : MonoBehaviour
         frontier.Enqueue(startNode);
         reached.Add(startNode.coordinates, startNode);
 
-        while (frontier.Count > 0 && isRunning && safeGuard < 1000)
+        while (frontier.Count > 0 && isRunning && ++safeGuard < 1000)
         {
             currentSearchNode = frontier.Dequeue();
             ExploreNeighbours(currentSearchNode);
@@ -104,7 +104,6 @@ public class PathFinder : MonoBehaviour
             }
             Debug.Log("Path is not valid! (pathfinder)");
         }
-        safeGuard++;
     }
 
     void ExploreNeighbours(Node _currentSearchNode)
@@ -146,7 +145,7 @@ public class PathFinder : MonoBehaviour
         Vector2Int nodeCoord = node.coordinates;
 
         bool reachedEndOfGraph = reached[nodeCoord].parentNode == null;
-        while (!reachedEndOfGraph && isRunning && safeGuard < 1000)
+        while (!reachedEndOfGraph && isRunning && ++safeGuard < 1000)
         {
             path.Add(node);
             grid[nodeCoord].isPath = true;
@@ -160,9 +159,7 @@ public class PathFinder : MonoBehaviour
                 nodeCoord = node.coordinates;
                 reached[nodeCoord].isPath = true;
             }
-            safeGuard++;
         }
         path.Reverse();
-
     }
 }

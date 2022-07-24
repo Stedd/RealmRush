@@ -29,7 +29,7 @@ public class Tower : MonoBehaviour
 
     #region Privates
     [SerializeField] enum TargetStrategy { ClosestEnemy, LowestHealth };
-    private GameObject closestEnemy;
+    private GameObject targetEnemy;
     #endregion
 
     #region Publics
@@ -60,10 +60,10 @@ public class Tower : MonoBehaviour
     void Update()
     {
         ShootProjectile(false);
-        FindAndShootClosestEnemy();
+        FindAndShootEnemy();
     }
 
-    private void FindAndShootClosestEnemy()
+    private void FindAndShootEnemy()
     {
         float bestValue = Mathf.Infinity;
         bool targetFound = false;
@@ -83,7 +83,7 @@ public class Tower : MonoBehaviour
                     {
                         targetFound = true;
                         bestValue = distanceToTarget;
-                        closestEnemy = enemy;
+                        targetEnemy = enemy;
                     }
                 }
                 if (targetStrategy == TargetStrategy.LowestHealth)
@@ -95,7 +95,7 @@ public class Tower : MonoBehaviour
                     {
                         targetFound = true;
                         bestValue = enemyHealth;
-                        closestEnemy = enemy;
+                        targetEnemy = enemy;
                     }
                 }
             }
@@ -103,7 +103,7 @@ public class Tower : MonoBehaviour
 
         if (targetFound)
         {
-            weapon.transform.LookAt(closestEnemy.transform.position);
+            weapon.transform.LookAt(targetEnemy.transform.position);
             ShootProjectile(true);
         }
     }
